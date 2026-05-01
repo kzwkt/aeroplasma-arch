@@ -13,9 +13,6 @@ packages=(
   aerothemeplasma-icons
 )
 
-# Ensure required tools exist
-echo "==> Installing base dependencies"
-pacman -Syu --noconfirm base-devel git
 
 # Create output dir
 mkdir -p output
