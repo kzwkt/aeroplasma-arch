@@ -22,6 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           pacman -Sy --noconfirm base-devel git sudo
+          echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
       - name: Prepare build user
         run: |
