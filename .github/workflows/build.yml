@@ -5,9 +5,14 @@ on:
   push:
     paths:
       - 'build.sh'
+      - 'build.yml'
   pull_request:
     paths:
       - 'build.sh'
+      - 'build.yml'
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -16,13 +21,18 @@ jobs:
       image: archlinux:latest
 
     steps:
+      - name: Install dependencies & Reflector
+        run: |
+          pacman -Sy --noconfirm base-devel git sudo nodejs npm reflector
+          
+          echo "==> Ranking Arch Linux mirrors for fast downloads..."
+          reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+          pacman -Syy
+          
+          echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          pacman -Sy --noconfirm base-devel git sudo
-          echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
       - name: Prepare build user
         run: |
@@ -34,16 +44,13 @@ jobs:
           chmod +x build.sh
           su build -c './build.sh'
 
-      - name: Collect built packages
-        run: |
-          echo "FILES=$(ls output/*.pkg.tar.* | tr '\n' ' ')" >> $GITHUB_ENV
-
       - name: Create/Update GitHub Release (latest)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: Latest Build
-          files: ${{ env.FILES }}
-          replace: true
+          files: output/*.pkg.tar.*
+          overwrite_files: true
+          fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
