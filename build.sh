@@ -36,5 +36,3 @@ for pkg in "${packages[@]}"; do
   
   popd >/dev/null
 done
-
-echo "==> All packages built successfully"
