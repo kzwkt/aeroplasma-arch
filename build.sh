@@ -3,12 +3,12 @@ set -euo pipefail
 
 # Packages to build
 packages=(
-  uac-polkit-agent-git
-  aerothemeplasma-desktop-git
   aeroshell-libplasma-git
   aeroshell-workspace-git
   aeroshell-kwin-components-git
   aeroshell-smod-git
+  uac-polkit-agent-git
+  aerothemeplasma-desktop-git
   aerothemeplasma-sounds-git
   aerothemeplasma-icons-git
 )
