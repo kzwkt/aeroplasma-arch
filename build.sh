@@ -28,6 +28,8 @@ for pkg in "${packages[@]}"; do
   
   # Build package (auto install deps, no prompts)
   makepkg -s --noconfirm --needed
+  built_package=$(find "$OUTPUT_DIR" -maxdepth 1 -name "$pkg-*.pkg.tar.*" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
+  pacman -U --noconfirm "$built_package 
   
   # Move built package
   mv *.pkg.tar.* ../output/
